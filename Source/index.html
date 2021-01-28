@@ -13,15 +13,18 @@
 	</head>
 	<body>
 		<script>
-			$.ajax('https://extralife.donordrive.com/api/participants/448764', {
-				success: function(data) {
-					console.log(data.displayName);
-					document.getElementById("participant-container").innerHTML = data.sumDonations + " / " + data.fundraisingGoal;
-				},
-				error: function() {
-					alert('API ENDPOINT ERROR');
-				}
-			});
+			setInterval(refreshAmount, 17000);
+			
+			function refreshAmount() {
+				$.ajax('https://extralife.donordrive.com/api/participants/448764', {
+					success: function(data) {
+						document.getElementById("participant-container").innerHTML = data.sumDonations + " / " + data.fundraisingGoal;
+					},
+						error: function() {
+							alert('API ENDPOINT ERROR');
+						}
+				});
+			}
 		</script>
 		<div class="container">
 			<h1>Fundraiser goal</h1>
