@@ -2,8 +2,7 @@
 
 
 
-localStorage.setItem("etagTotal", "");
-localStorage.setItem("etagDonation", "");
+localStorage.setItem("etag", "");
 var participantLink = 'https://extralife.donordrive.com/api/participants/448764';
 var donationLink = 'https://extralife.donordrive.com/api/participants/448764/donations?limit=1';
 
@@ -11,7 +10,7 @@ var donationLink = 'https://extralife.donordrive.com/api/participants/448764/don
 function getDonationInfo() {
 	
 	const myHeaders = new Headers({
-		'If-none-match': localStorage.getItem('etagTotal')
+		'If-none-match': localStorage.getItem('etag')
 	});
 	
 	const requestInfo = new Request(participantLink, {
@@ -33,7 +32,7 @@ function getDonationInfo() {
 					goalTarget.innerHTML = currentDonations + " / " + fundraiserGoal;
 				});
 				var etag = response.headers.get('etag');
-				localStorage.setItem("etagTotal", etag);				
+				localStorage.setItem("etag", etag);				
 				console.log('Local storage updated');
 				getDonationList();
 			}
@@ -45,39 +44,27 @@ function getDonationInfo() {
 
 function getDonationList() {
 	
-	const myHeaders = new Headers({
-		'If-none-match': localStorage.getItem('etagDonation')
-	});
-	
 	const requestInfo = new Request(donationLink, {
 		method: 'GET',
-		headers: myHeaders,
 		mode: 'cors',
 		cache: 'default',
 	});
 	
 	fetch(requestInfo)
 		.then(function(response) {
-			if (response.status == 304) {
-				console.log("Data unchanged");
-			} else {
-				response.json().then(data => {
-					var data = data[0];
-					var donorGroup = document.getElementById("donation");
-					var donorName = data.displayName;
-					var donorAmount = data.amount;
-					if (data.message) {
-						var donorMessage = data.message;
-						donorGroup.children[2].innerHTML = donorMessage;
-					}
-					donorGroup.children[0].innerHTML = donorName;
-					donorGroup.children[1].innerHTML = donorAmount;					
-				});
-				var etag = response.headers.get('etag');
-				localStorage.setItem("etagDonation", etag);
-				console.log('Local storage updated');
-			}
-		}).catch(function(err) {
+			response.json().then(data => {
+				var data = data[0];
+				var donorGroup = document.getElementById("donation");
+				var donorName = data.displayName;
+				var donorAmount = data.amount;
+				if (data.message) {
+					var donorMessage = data.message;
+					donorGroup.children[2].innerHTML = donorMessage;
+				}
+				donorGroup.children[0].innerHTML = donorName;
+				donorGroup.children[1].innerHTML = donorAmount;					
+			});
+			}).catch(function(err) {
 				console.error(` Err: ${err}`);
 			});
 }
