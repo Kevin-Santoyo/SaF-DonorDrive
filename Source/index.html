@@ -6,30 +6,20 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<script src="donordrive.js" type="text/javascript"></script>
 		<title>JavaScript DonorDrive API Test</title>
-
-		<style>
-		</style>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<script>
-			setInterval(refreshAmount, 17000);
+			// getDonationTotal();
+			getDonationInfo();
 			
-			function refreshAmount() {
-				$.ajax('https://extralife.donordrive.com/api/participants/448764', {
-					success: function(data) {
-						document.getElementById("participant-container").innerHTML = data.sumDonations + " / " + data.fundraisingGoal;
-					},
-						error: function() {
-							alert('API ENDPOINT ERROR');
-						}
-				});
-			}
+			setInterval(getDonationInfo, 20000);
 		</script>
 		<div class="container">
-			<h1>Fundraiser goal</h1>
-				<div id="participant-container">
-				</div>
+			<p>2021 Amount Raised</p>
+			<p id="goal"></p>
 			</div>
 		</div>
 	</body>
