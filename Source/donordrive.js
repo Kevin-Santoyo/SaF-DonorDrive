@@ -5,7 +5,14 @@
 localStorage.setItem("etag", "");
 var participantLink = 'https://extralife.donordrive.com/api/participants/448764';
 var donationLink = 'https://extralife.donordrive.com/api/participants/448764/donations?limit=1';
-
+var currentDonations
+var fundraiserGoal
+var goalTarger
+var etag
+var donorGroup
+var donorName
+var donorAmount
+var donorMessage
 
 function getDonationInfo() {
 	
@@ -26,12 +33,12 @@ function getDonationInfo() {
 				console.log("Data unchanged");
 			} else {
 				response.json().then(data => {
-					var currentDonations = data.sumDonations;
-					var fundraiserGoal = data.fundraisingGoal;
-					var goalTarget = document.getElementById("goal");
+					currentDonations = data.sumDonations;
+					fundraiserGoal = data.fundraisingGoal;
+					goalTarget = document.getElementById("goal");
 					goalTarget.innerHTML = currentDonations + " / " + fundraiserGoal;
 				});
-				var etag = response.headers.get('etag');
+				etag = response.headers.get('etag');
 				localStorage.setItem("etag", etag);				
 				console.log('Local storage updated');
 				getDonationList();
@@ -54,11 +61,15 @@ function getDonationList() {
 		.then(function(response) {
 			response.json().then(data => {
 				var data = data[0];
-				var donorGroup = document.getElementById("donation");
-				var donorName = data.displayName;
+				donorGroup = document.getElementById("donation");
+				if (data.displayName) {
+					donorName = data.displayName;
+				} else {
+					donorName = "Anonymous Donor";
+				}
 				var donorAmount = data.amount;
 				if (data.message) {
-					var donorMessage = data.message;
+					donorMessage = data.message;
 					donorGroup.children[2].innerHTML = donorMessage;
 				}
 				donorGroup.children[0].innerHTML = donorName;
