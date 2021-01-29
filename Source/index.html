@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<meta charset="UTF-8">
 		<title>Fundraiser Total</title>
 		<script src="donordrive.js" type="text/javascript"></script>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<script>
-			// getDonationTotal();
 			getDonationInfo();
-			
+			getDonationList();
 			setInterval(getDonationInfo, 20000);
+			countdownTimer()
+			setInterval(countdownTimer, 1000);
 		</script>
 		<div class="container">
 			<p>2021 Amount Raised</p>
 			<p id="goal"></p>
 			</div>
 		</div>
+		<div id="donation">
+			<p></p>
+			<p></p>
+			<p></p>
+		</div>
+		
+		<h2 id="countdown"></h2>
 	</body>
 </html>
