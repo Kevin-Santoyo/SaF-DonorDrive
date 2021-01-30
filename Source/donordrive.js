@@ -8,7 +8,9 @@ localStorage.setItem("recentDonation", "");
 localStorage.removeItem("etag");
 var participantLink = 'https://extralife.donordrive.com/api/participants/448764';
 var donationLink = 'https://extralife.donordrive.com/api/participants/448764/donations';
+var vol = .5;
 var audio = new Audio('audio/cash.mp3');
+audio.volume = vol
 var currentDonations
 var fundraiserGoal
 var goalTarger
@@ -36,7 +38,7 @@ function getDonationInfo() {
 		.then(function(response) {
 			if (response.status == 304) {
 				console.log("No change");
-				return false
+				return false;
 			} else {
 				response.json().then(data => {
 					currentDonations = data.sumDonations;
@@ -45,9 +47,8 @@ function getDonationInfo() {
 					goalTarget.innerHTML = currentDonations + " / " + fundraiserGoal;
 				});
 				var etag = response.headers.get('etag');
-				localStorage.setItem("etagTotal", etag);				
+				localStorage.setItem("etagTotal", etag);
 				return true;
-				getDonationList();
 			}
 		}).catch(function(err) {
 				console.error(` Err: ${err}`);
@@ -104,11 +105,11 @@ function donationPopup() {
 	var donorGroup = document.getElementById("donation");
 	if(getDonationList()) {
 		console.log("true");
-		audio.play();
-		fadeIn(donorGroup);
 	} else {
 		console.log("false");
 	}
+	audio.play();
+	fadeIn(donorGroup);
 }
 
 function countdownTimer() {
@@ -137,10 +138,17 @@ function countdownTimer() {
 
 function donorNameFilter(input) {
 	
+	if (input) {
+		
+	} else {
+		return "Anonymous Donor";
+	}
+	
 }
 
 function fadeOut(element) {
 	var op = 1;  // initial opacity
+	var freeeze = 5;
 	var timer = setInterval(function () {
 		if (op <= 0.1){
 			clearInterval(timer);
@@ -149,30 +157,29 @@ function fadeOut(element) {
 		element.style.opacity = op;
 		element.style.filter = 'alpha(opacity=' + op * 100 + ")";
 		op -= op * 0.1;
-	}, 30);
+	}, 50);
 }
 
 function fadeIn(element) {
     var op = 0.1;  // initial opacity
-    element.style.display = 'block';
+	element.style.display = 'block';
     var timer = setInterval(function () {
-		if (op >= 1){
+		if (op >= .95){
 			clearInterval(timer);
-			sleep(3000);
+		}
+		element.style.opacity = op;
+		element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+		op += op * 0.05;
+	}, 15);
+	var timer2 = setInterval(function () {
+		if (op >= 1){
+			clearInterval(timer2);
 			fadeOut(element);
 		}
 		element.style.opacity = op;
 		element.style.filter = 'alpha(opacity=' + op * 100 + ")";
-		op += op * 0.1;
-	}, 30);
-}
-
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
+		op += op * 0.01;
+	}, 4500);
 }
 
 
