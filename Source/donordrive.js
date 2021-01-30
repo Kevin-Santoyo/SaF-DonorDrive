@@ -4,7 +4,7 @@
 
 localStorage.setItem("etagTotal", "");
 localStorage.setItem("etagDonation", "");
-localStorage.setItem("recentDonation", "");
+localStorage.setItem("recentDonation", "C662CD1CFD025D94");
 localStorage.removeItem("etag");
 var participantLink = 'https://extralife.donordrive.com/api/participants/448764';
 var donationLink = 'https://extralife.donordrive.com/api/participants/448764/donations';
@@ -78,19 +78,15 @@ function getDonationList() {
 				response.json().then(data => {
 					var data = data[0];
 					var donorGroup = document.getElementById("donation");
-					if (data.displayName) {
-						donorName = data.displayName;
-					} else {
-						donorName = "Anonymous Donor";
-					}
-					var donorAmount = "$" + data.amount;
+					donorName = donorNameFilter(data.displayName);
+					donorAmount = "$" + data.amount;
 					if (data.message) {
 						donorMessage = data.message;
 						donorGroup.children[2].innerHTML = donorMessage;
 					}
-					var etag = response.headers.get('etag');
 					donorGroup.children[0].innerHTML = donorName;
 					donorGroup.children[1].innerHTML = donorAmount;
+					var etag = response.headers.get('etag');
 					localStorage.setItem("etagDonation", etag);
 					return true;
 				});
@@ -98,6 +94,48 @@ function getDonationList() {
 			}).catch(function(err) {
 				console.error(` Err: ${err}`);
 			});
+}
+
+function checkRecentDonations() {
+
+	const donationHeaders = new Headers({
+		'If-none-match': localStorage.getItem('etagDonation')
+	});
+
+	const requestDonations = new Request(donationLink, {
+		method: 'GET',
+		headers: donationHeaders,
+		mode: 'cors',
+		cache: 'default',
+	});
+
+	fetch(requestDonations)
+		.then(function(response) {
+			if (response.status == 304) {
+				return false;
+			} else {
+				response.json().then(data => {
+					var x = localStorage.recentDonation;
+					let donationLog = [];
+					console.log(data);
+					for (donor in data) {
+						console.log(x);
+						console.log(data[donor].donationID);
+						if (data[donor].donationID == x) {
+							console.log(x + " match found");
+							break;
+						} else {
+							console.log("donation ID is not a match");
+							donationLog.push(data[donor]);
+							console.log(donationLog);
+						}
+					}
+				});
+			}
+		}).catch(function(err) {
+			console.error(` Err: ${err}`);
+		});
+
 }
 
 function donationPopup() {
@@ -110,6 +148,26 @@ function donationPopup() {
 	}
 	audio.play();
 	fadeIn(donorGroup);
+}
+
+function donorNameFilter(input) {
+	
+	if (input) {
+		if (input == "Facebook Donor") {
+			return "Facebook Donor";
+		} else {
+			var x = input.search(" ");
+			if (x == -1) {
+				return input;
+			} else {
+				var firstString = input.substring(0, x);
+				return firstString;
+			}
+		}
+	} else {
+		return "Anonymous Donor";
+	}
+	
 }
 
 function countdownTimer() {
@@ -136,18 +194,8 @@ function countdownTimer() {
 	}, 1000);
 }
 
-function donorNameFilter(input) {
-	
-	if (input) {
-		
-	} else {
-		return "Anonymous Donor";
-	}
-	
-}
-
 function fadeOut(element) {
-	var op = 1;  // initial opacity
+	var op = 1;
 	var freeeze = 5;
 	var timer = setInterval(function () {
 		if (op <= 0.1){
@@ -161,7 +209,7 @@ function fadeOut(element) {
 }
 
 function fadeIn(element) {
-    var op = 0.1;  // initial opacity
+    var op = 0.1;
 	element.style.display = 'block';
     var timer = setInterval(function () {
 		if (op >= .95){
