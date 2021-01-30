@@ -2,9 +2,13 @@
 
 
 
-localStorage.setItem("etag", "");
+localStorage.setItem("etagTotal", "");
+localStorage.setItem("etagDonation", "");
+localStorage.setItem("recentDonation", "");
+localStorage.removeItem("etag");
 var participantLink = 'https://extralife.donordrive.com/api/participants/448764';
-var donationLink = 'https://extralife.donordrive.com/api/participants/448764/donations?limit=1';
+var donationLink = 'https://extralife.donordrive.com/api/participants/448764/donations';
+var audio = new Audio('audio/cash.mp3');
 var currentDonations
 var fundraiserGoal
 var goalTarger
@@ -14,15 +18,16 @@ var donorName
 var donorAmount
 var donorMessage
 
+
 function getDonationInfo() {
 	
-	const myHeaders = new Headers({
-		'If-none-match': localStorage.getItem('etag')
+	const infoHeaders = new Headers({
+		'If-none-match': localStorage.getItem('etagTotal')
 	});
 	
 	const requestInfo = new Request(participantLink, {
 		method: 'GET',
-		headers: myHeaders,
+		headers: infoHeaders,
 		mode: 'cors',
 		cache: 'default',
 	});
@@ -30,7 +35,8 @@ function getDonationInfo() {
 	fetch(requestInfo)
 		.then(function(response) {
 			if (response.status == 304) {
-				console.log("Data unchanged");
+				console.log("No change");
+				return false
 			} else {
 				response.json().then(data => {
 					currentDonations = data.sumDonations;
@@ -38,9 +44,9 @@ function getDonationInfo() {
 					goalTarget = document.getElementById("goal");
 					goalTarget.innerHTML = currentDonations + " / " + fundraiserGoal;
 				});
-				etag = response.headers.get('etag');
-				localStorage.setItem("etag", etag);				
-				console.log('Local storage updated');
+				var etag = response.headers.get('etag');
+				localStorage.setItem("etagTotal", etag);				
+				return true;
 				getDonationList();
 			}
 		}).catch(function(err) {
@@ -51,59 +57,76 @@ function getDonationInfo() {
 
 function getDonationList() {
 	
-	const requestInfo = new Request(donationLink, {
+	const donationHeaders = new Headers({
+		'If-none-match': localStorage.getItem('etagDonation')
+	});
+	
+	const requestDonations = new Request(donationLink, {
 		method: 'GET',
+		headers: donationHeaders,
 		mode: 'cors',
 		cache: 'default',
 	});
-	
-	fetch(requestInfo)
+
+	fetch(requestDonations)
 		.then(function(response) {
-			response.json().then(data => {
-				var data = data[0];
-				donorGroup = document.getElementById("donation");
-				if (data.displayName) {
-					donorName = data.displayName;
-				} else {
-					donorName = "Anonymous Donor";
-				}
-				var donorAmount = data.amount;
-				if (data.message) {
-					donorMessage = data.message;
-					donorGroup.children[2].innerHTML = donorMessage;
-				}
-				donorGroup.children[0].innerHTML = donorName;
-				donorGroup.children[1].innerHTML = donorAmount;					
-			});
+			if (response.status == 304) {
+				console.log("No change");
+				return false;
+			} else {
+				response.json().then(data => {
+					var data = data[0];
+					var donorGroup = document.getElementById("donation");
+					if (data.displayName) {
+						donorName = data.displayName;
+					} else {
+						donorName = "Anonymous Donor";
+					}
+					var donorAmount = "$" + data.amount;
+					if (data.message) {
+						donorMessage = data.message;
+						donorGroup.children[2].innerHTML = donorMessage;
+					}
+					var etag = response.headers.get('etag');
+					donorGroup.children[0].innerHTML = donorName;
+					donorGroup.children[1].innerHTML = donorAmount;
+					localStorage.setItem("etagDonation", etag);
+					return true;
+				});
+			}
 			}).catch(function(err) {
 				console.error(` Err: ${err}`);
 			});
 }
 
+function donationPopup() {
+	
+	var donorGroup = document.getElementById("donation");
+	if(getDonationList()) {
+		console.log("true");
+		audio.play();
+		fadeIn(donorGroup);
+	} else {
+		console.log("false");
+	}
+}
 
 function countdownTimer() {
 	
 	var countDownDate = new Date("Feb 20, 2021 10:00:00").getTime();
 	
-	// Update the count down every 1 second
 	var x = setInterval(function() {
 		
-		// Get today's date and time
 		var now = new Date().getTime();
 		
-		// Find the distance between now and the count down date
 		var distance = countDownDate - now;
 		
-		// Time calculations for days, hours, minutes and seconds
 		var days = Math.floor(distance / (1000 * 60 * 60 * 24));
 		var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 		var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 		var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 		
-		// Display the result in the element with id="demo"
 		document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-		
-		// If the count down is finished, write some text
 		
 		if (distance < 0) {
 			clearInterval(x);
@@ -111,3 +134,46 @@ function countdownTimer() {
 		}
 	}, 1000);
 }
+
+function donorNameFilter(input) {
+	
+}
+
+function fadeOut(element) {
+	var op = 1;  // initial opacity
+	var timer = setInterval(function () {
+		if (op <= 0.1){
+			clearInterval(timer);
+			element.style.display = 'none';
+		}
+		element.style.opacity = op;
+		element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+		op -= op * 0.1;
+	}, 30);
+}
+
+function fadeIn(element) {
+    var op = 0.1;  // initial opacity
+    element.style.display = 'block';
+    var timer = setInterval(function () {
+		if (op >= 1){
+			clearInterval(timer);
+			sleep(3000);
+			fadeOut(element);
+		}
+		element.style.opacity = op;
+		element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+		op += op * 0.1;
+	}, 30);
+}
+
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+
+
