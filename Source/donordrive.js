@@ -209,7 +209,7 @@ function donorNameFilter(input) {
 	} else {
 		return "Anonymous Donor";
 	}
-	
+		
 }
 
 function countdownTimer() {
