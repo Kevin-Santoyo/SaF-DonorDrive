@@ -4,10 +4,11 @@
 
 localStorage.setItem("etagTotal", "");
 localStorage.setItem("etagDonation", "");
-localStorage.setItem("recentDonation", "C662CD1CFD025D94");
+localStorage.setItem("recentDonation", "");
 localStorage.removeItem("etag");
 var participantLink = 'https://extralife.donordrive.com/api/participants/448764';
 var donationLink = 'https://extralife.donordrive.com/api/participants/448764/donations';
+var gifSrc = "https://uploads.twitchalerts.com/000/110/194/116/59c6ba24dda05_oie_oie_overlay%282%29.gif.8e293a25f11f923afb4a443a4deb9f37.gif"
 var vol = .5;
 var audio = new Audio('audio/cash.mp3');
 audio.volume = vol
@@ -19,6 +20,8 @@ var donorGroup
 var donorName
 var donorAmount
 var donorMessage
+window.donationLog = new Array;
+var currentIntervals = 0;
 
 
 function getDonationInfo() {
@@ -37,7 +40,6 @@ function getDonationInfo() {
 	fetch(requestInfo)
 		.then(function(response) {
 			if (response.status == 304) {
-				console.log("No change");
 				return false;
 			} else {
 				response.json().then(data => {
@@ -72,20 +74,13 @@ function getDonationList() {
 	fetch(requestDonations)
 		.then(function(response) {
 			if (response.status == 304) {
-				console.log("No change");
 				return false;
 			} else {
 				response.json().then(data => {
 					var data = data[0];
-					var donorGroup = document.getElementById("donation");
 					donorName = donorNameFilter(data.displayName);
 					donorAmount = "$" + data.amount;
-					if (data.message) {
-						donorMessage = data.message;
-						donorGroup.children[2].innerHTML = donorMessage;
-					}
-					donorGroup.children[0].innerHTML = donorName;
-					donorGroup.children[1].innerHTML = donorAmount;
+					updateDonation(donorName, donorAmount, data.message);
 					var etag = response.headers.get('etag');
 					localStorage.setItem("etagDonation", etag);
 					return true;
@@ -94,6 +89,45 @@ function getDonationList() {
 			}).catch(function(err) {
 				console.error(` Err: ${err}`);
 			});
+}
+
+function updateDonation(name, amount, message) {
+
+	var donorGroup = document.getElementById("donation");
+
+	if (message) {
+		donorGroup.children[2].innerHTML = message;
+	}
+
+	donorGroup.children[0].innerHTML = name;
+	donorGroup.children[1].innerHTML = amount;
+
+}
+
+function appendDonation(name, amount, message, sequence) {
+
+	var divContainer = document.createElement('div');
+	divContainer.id = "donation" + sequence;
+	divContainer.classList.add ("popup");
+
+	var nameH1 = document.createElement('h1');
+	nameH1.innerHTML = name;
+
+	var amountH1 = document.createElement('h1');
+	amountH1.innerHTML = amount;
+
+	var messageparagragh = document.createElement('p');
+	messageparagragh.innerHTML = message;
+
+	var extralifeIMG = document.createElement('img');
+	extralifeIMG.src = gifSrc;
+
+	divContainer.appendChild(nameH1);
+	divContainer.appendChild(amountH1);
+	divContainer.appendChild(messageparagragh);
+	divContainer.appendChild(extralifeIMG);
+
+	document.body.appendChild(divContainer);
 }
 
 function checkRecentDonations() {
@@ -115,21 +149,15 @@ function checkRecentDonations() {
 				return false;
 			} else {
 				response.json().then(data => {
-					var x = localStorage.recentDonation;
-					let donationLog = [];
-					console.log(data);
+					var recentDonation = localStorage.getItem('recentDonation');
 					for (donor in data) {
-						console.log(x);
-						console.log(data[donor].donationID);
-						if (data[donor].donationID == x) {
-							console.log(x + " match found");
-							break;
-						} else {
-							console.log("donation ID is not a match");
+						if (data[donor].donationID !== recentDonation) {
 							donationLog.push(data[donor]);
-							console.log(donationLog);
+						} else {
+							break;
 						}
 					}
+					donationPopup(donationLog);
 				});
 			}
 		}).catch(function(err) {
@@ -138,16 +166,30 @@ function checkRecentDonations() {
 
 }
 
-function donationPopup() {
+function donationPopup(donations) {
 	
-	var donorGroup = document.getElementById("donation");
-	if(getDonationList()) {
-		console.log("true");
-	} else {
-		console.log("false");
+	const announcementLength = 5000;
+
+	console.log(donations);
+	for (let i = donations.length - 1; i >= 0; i--) {
+		currentIntervals += 1
+		console.log(currentIntervals);
+		setTimeout(function () {
+			var divCheck = document.getElementsByClassName('popup');
+			if (divCheck.length > 0) {
+				divCheck[0].remove();
+			}
+			var donorName = donorNameFilter(donations[i].displayName);
+			var donorAmount = "$ " + donations[i].amount;
+			var donorMessage = donations[i].message || '';
+			appendDonation(donorName, donorAmount, donorMessage, i);
+			//audio.play();
+			fadeIn(document.getElementById('donation' + i));
+			localStorage.setItem('recentDonation', donations[i].donationID);
+			currentIntervals -= 1;
+		}, announcementLength * (currentIntervals - 1))
 	}
-	audio.play();
-	fadeIn(donorGroup);
+	window.donationLog = [];
 }
 
 function donorNameFilter(input) {
@@ -156,11 +198,11 @@ function donorNameFilter(input) {
 		if (input == "Facebook Donor") {
 			return "Facebook Donor";
 		} else {
-			var x = input.search(" ");
-			if (x == -1) {
+			var spaceIdx = input.search(" ");
+			if (spaceIdx == -1) {
 				return input;
 			} else {
-				var firstString = input.substring(0, x);
+				var firstString = input.substring(0, spaceIdx);
 				return firstString;
 			}
 		}
@@ -196,7 +238,6 @@ function countdownTimer() {
 
 function fadeOut(element) {
 	var op = 1;
-	var freeeze = 5;
 	var timer = setInterval(function () {
 		if (op <= 0.1){
 			clearInterval(timer);
@@ -227,7 +268,7 @@ function fadeIn(element) {
 		element.style.opacity = op;
 		element.style.filter = 'alpha(opacity=' + op * 100 + ")";
 		op += op * 0.01;
-	}, 4500);
+	}, 4000);
 }
 
 
