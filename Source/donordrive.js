@@ -4,10 +4,12 @@
 
 localStorage.setItem("etagTotal", "");
 localStorage.setItem("etagDonation", "");
+localStorage.setItem("etagRecent", "");
 localStorage.setItem("recentDonation", "");
 localStorage.removeItem("etag");
-var participantLink = 'https://extralife.donordrive.com/api/participants/448764';
-var donationLink = 'https://extralife.donordrive.com/api/participants/448764/donations';
+var participantID = "448764";
+var participantLink = 'https://extralife.donordrive.com/api/participants/' + participantID;
+var donationLink = 'https://extralife.donordrive.com/api/participants/' + participantID + '/donations';
 var gifSrc = "https://uploads.twitchalerts.com/000/110/194/116/59c6ba24dda05_oie_oie_overlay%282%29.gif.8e293a25f11f923afb4a443a4deb9f37.gif"
 var vol = .5;
 var audio = new Audio('audio/cash.mp3');
@@ -133,7 +135,7 @@ function appendDonation(name, amount, message, sequence) {
 function checkRecentDonations() {
 
 	const donationHeaders = new Headers({
-		'If-none-match': localStorage.getItem('etagDonation')
+		'If-none-match': localStorage.getItem('etagRecent')
 	});
 
 	const requestDonations = new Request(donationLink, {
@@ -157,6 +159,8 @@ function checkRecentDonations() {
 							break;
 						}
 					}
+					var etag = response.headers.get('etag');
+					localStorage.setItem('etagRecent', etag);
 					donationPopup(donationLog);
 				});
 			}
@@ -183,7 +187,7 @@ function donationPopup(donations) {
 			var donorAmount = "$ " + donations[i].amount;
 			var donorMessage = donations[i].message || '';
 			appendDonation(donorName, donorAmount, donorMessage, i);
-			//audio.play();
+			audio.play();
 			fadeIn(document.getElementById('donation' + i));
 			localStorage.setItem('recentDonation', donations[i].donationID);
 			currentIntervals -= 1;
