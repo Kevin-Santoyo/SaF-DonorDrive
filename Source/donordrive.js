@@ -10,7 +10,6 @@ localStorage.removeItem("etag");
 var participantID = "448764";
 var participantLink = 'https://extralife.donordrive.com/api/participants/' + participantID;
 var donationLink = 'https://extralife.donordrive.com/api/participants/' + participantID + '/donations';
-var gifSrc = "https://uploads.twitchalerts.com/000/110/194/116/59c6ba24dda05_oie_oie_overlay%282%29.gif.8e293a25f11f923afb4a443a4deb9f37.gif"
 var vol = .5;
 var audio = new Audio('audio/cash.mp3');
 audio.volume = vol
@@ -115,20 +114,17 @@ function appendDonation(name, amount, message, sequence) {
 	var nameH1 = document.createElement('h1');
 	nameH1.innerHTML = name;
 
-	var amountH1 = document.createElement('h1');
-	amountH1.innerHTML = amount;
+	var amountH2 = document.createElement('h2');
+	amountH2.innerHTML = "<span class='text'>Donated </span>" + amount;
 
 	var messageparagragh = document.createElement('p');
 	messageparagragh.innerHTML = message;
+	messageparagragh.classList.add ("text");
 
-	var extralifeIMG = document.createElement('img');
-	extralifeIMG.src = gifSrc;
 
 	divContainer.appendChild(nameH1);
-	divContainer.appendChild(amountH1);
+	divContainer.appendChild(amountH2);
 	divContainer.appendChild(messageparagragh);
-	divContainer.appendChild(extralifeIMG);
-
 	document.body.appendChild(divContainer);
 }
 
@@ -184,7 +180,7 @@ function donationPopup(donations) {
 				divCheck[0].remove();
 			}
 			var donorName = donorNameFilter(donations[i].displayName);
-			var donorAmount = "$ " + donations[i].amount;
+			var donorAmount = "$" + donations[i].amount;
 			var donorMessage = donations[i].message || '';
 			appendDonation(donorName, donorAmount, donorMessage, i);
 			audio.play();

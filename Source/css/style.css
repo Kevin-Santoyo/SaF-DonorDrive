@@ -1,20 +1,50 @@
+@font-face {
+	font-family: 'furore';
+	src: url('../fonts/furore.ttf') format('truetype');
+}
 div {
-	background-color: #58648f;
+	font-family: 'furore';
+ 	/* background-color: #58648f;*/
 	width: 300px;
 	height: 200px;
 	text-align: center;
 	color: #04D9FF;
 }
 
-
-#donation:first-child {
-	padding-top: 20px;
-}
-
-.popup > p {
-	font-size: 20px;
+.popup {
+	/*opacity: 0;*/
 }
 
 .popup {
-	opacity: 0;
+	font-family: 'furore';
+	background-image: url("https://cdn.streamelements.com/static/alertbox/extralife-default.png");
+	background-repeat: no-repeat;
+	width: 1075px;
+	height: 450px;
+}
+
+.popup h1 {
+	padding-top: 170px;
+	padding-left: 90px;
+	padding-bottom: 0;
+	margin-bottom: 0;
+	font-size: 40px;
+}
+
+.popup h2 {
+	font-size: 40px;
+	margin: 0;
+	padding: 0 0 0 90px;;
+}
+
+.popup p {
+	margin-top: 10px;
+	padding-left: 140px;
+	font-size: 30px;
+	max-width: 900px;
+}
+
+.popup .text {
+	font-family: 'Verdana';
+	color: white;
 }
