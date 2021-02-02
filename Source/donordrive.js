@@ -9,6 +9,7 @@ localStorage.setItem("etagRecent", "");
 if (document.cookie) {
 	var donationCookie = document.cookie;
 	donationCookieArray = donationCookie.split("=");
+	localStorage.setItem("recentDonation", donationCookieArray[1]);
 	console.log(donationCookieArray[1]);
 } else {
 	localStorage.setItem("recentDonation", "");
