@@ -5,12 +5,13 @@
 localStorage.setItem("etagTotal", "");
 localStorage.setItem("etagDonation", "");
 localStorage.setItem("etagRecent", "");
-localStorage.setItem("recentDonation", "");
 
 if (document.cookie) {
 	var donationCookie = document.cookie;
 	donationCookieArray = donationCookie.split("=");
 	console.log(donationCookieArray[1]);
+} else {
+	localStorage.setItem("recentDonation", "");
 }
 
 localStorage.removeItem("etag");
