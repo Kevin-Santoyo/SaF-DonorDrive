@@ -10,7 +10,6 @@ if (document.cookie) {
 	var donationCookie = document.cookie;
 	donationCookieArray = donationCookie.split("=");
 	localStorage.setItem("recentDonation", donationCookieArray[1]);
-	console.log(donationCookieArray[1]);
 } else {
 	localStorage.setItem("recentDonation", "");
 }
@@ -179,10 +178,8 @@ function donationPopup(donations) {
 	
 	const announcementLength = 5000;
 
-	console.log(donations);
 	for (let i = donations.length - 1; i >= 0; i--) {
 		currentIntervals += 1
-		console.log(currentIntervals);
 		setTimeout(function () {
 			var divCheck = document.getElementsByClassName('popup');
 			if (divCheck.length > 0) {
