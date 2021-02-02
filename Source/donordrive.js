@@ -6,6 +6,13 @@ localStorage.setItem("etagTotal", "");
 localStorage.setItem("etagDonation", "");
 localStorage.setItem("etagRecent", "");
 localStorage.setItem("recentDonation", "");
+
+if (document.cookie) {
+	var donationCookie = document.cookie;
+	donationCookieArray = donationCookie.split("=");
+	console.log(donationCookieArray[1]);
+}
+
 localStorage.removeItem("etag");
 var participantID = "448764";
 var participantLink = 'https://extralife.donordrive.com/api/participants/' + participantID;
@@ -186,6 +193,7 @@ function donationPopup(donations) {
 			audio.play();
 			fadeIn(document.getElementById('donation' + i));
 			localStorage.setItem('recentDonation', donations[i].donationID);
+			document.cookie = "recentDonation=" + donations[i].donationID;
 			currentIntervals -= 1;
 		}, announcementLength * (currentIntervals - 1))
 	}
@@ -269,6 +277,10 @@ function fadeIn(element) {
 		element.style.filter = 'alpha(opacity=' + op * 100 + ")";
 		op += op * 0.01;
 	}, 4000);
+}
+
+function checkCookie(cookie) {
+	var donationID = 
 }
 
 
