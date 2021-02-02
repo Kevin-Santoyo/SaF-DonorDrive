@@ -279,9 +279,5 @@ function fadeIn(element) {
 	}, 4000);
 }
 
-function checkCookie(cookie) {
-	var donationID = 
-}
-
 
 
