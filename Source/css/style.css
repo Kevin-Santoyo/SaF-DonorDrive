@@ -4,15 +4,34 @@
 }
 div {
 	font-family: 'furore';
- 	/* background-color: #58648f;*/
 	width: 300px;
 	height: 200px;
 	text-align: center;
 	color: #04D9FF;
 }
 
+.total, .donation {
+	font-size: 40px;
+	width: 900px;
+	height: 100px;
+	background-color: #37415d;
+	border: #04D9FF 3px solid;
+	border-radius: 15px;
+	text-align: left;
+}
+
+.total p, .donation p {
+	margin-top: 20px;
+	padding-left: 10px;
+}
+
+#goal, #amt {
+	float: right;
+	padding-right: 10px;
+}
+
 .popup {
-	/*opacity: 0;*/
+	opacity: 0;
 }
 
 .popup {
