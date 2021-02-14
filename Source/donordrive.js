@@ -6,15 +6,15 @@ localStorage.setItem("etagTotal", "");
 localStorage.setItem("etagDonation", "");
 localStorage.setItem("etagRecent", "");
 
-if (document.cookie) {
-	var donationCookie = document.cookie;
-	donationCookieArray = donationCookie.split("=");
-	localStorage.setItem("recentDonation", donationCookieArray[1]);
+if (getCookie('recentDonation')) {
+	var donationCookie = getCookie('recentDonation');
+	console.log("success");
+	localStorage.setItem("recentDonation", donationCookie);
 } else {
 	localStorage.setItem("recentDonation", "");
+	console.log("failure");
 }
 
-localStorage.removeItem("etag");
 var participantID = "448764";
 var participantLink = 'https://extralife.donordrive.com/api/participants/' + participantID;
 var donationLink = 'https://extralife.donordrive.com/api/participants/' + participantID + '/donations';
@@ -31,6 +31,9 @@ var donorAmount
 var donorMessage
 window.donationLog = new Array;
 var currentIntervals = 0;
+
+
+
 
 
 function getDonationInfo() {
@@ -181,15 +184,16 @@ function donationPopup(donations) {
 			if (divCheck.length > 0) {
 				divCheck[0].remove();
 			}
-			var donorName = donorNameFilter(donations[i].displayName);
+			var donorName = donorNameFilterPopup(donations[i].displayName);
 			var donorAmount = "$" + donations[i].amount;
 			var donorMessage = donations[i].message || '';
 			appendDonation(donorName, donorAmount, donorMessage, i);
 			audio.play();
 			fadeIn(document.getElementById('donation' + i));
 			localStorage.setItem('recentDonation', donations[i].donationID);
-			document.cookie = "recentDonation=" + donations[i].donationID;
+			document.cookie = "recentDonation=" + donations[i].donationID + "; expires=Thu, 31 Dec 2099 23:59:59 GMT";
 			currentIntervals -= 1;
+			sendJSON(donations[i]);
 		}, announcementLength * (currentIntervals - 1))
 	}
 	window.donationLog = [];
@@ -225,28 +229,83 @@ function donorNameFilter(input) {
 
 }
 
+function donorNameFilterPopup(input) {
+
+	if (input) {
+		if (input == "Facebook Donor") {
+			return "Facebook Donor";
+		} else {
+			var spaceIdx = input.search(" ");
+			if (spaceIdx == -1) {
+				return input;
+			} else {
+				var firstString = input.substring(0, spaceIdx);
+				return firstString;
+			}
+		}
+	} else {
+		return "Anonymous Donor";
+	}
+
+}
+
 function countdownTimer() {
 
-	var countDownDate = new Date("Feb 20, 2021 10:00:00").getTime();
+	var countDate = new Date("Feb 20, 2021 10:00:00").getTime();
 
 	var x = setInterval(function () {
 
 		var now = new Date().getTime();
 
-		var distance = countDownDate - now;
+		var distance = countDate - now;
 
-		var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-		var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-		var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-		var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+		if (distance > 0) {
 
-		document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-		if (distance < 0) {
-			clearInterval(x);
-			document.getElementById("countdown").innerHTML = "EXPIRED";
+		} else if (distance < 0) {
+			distance = (now - countDate);
 		}
+		var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+		console.log(days);
+		if (days == 0) {
+			days = '';
+		} else if(days == 1) {
+			days = "1 Day "
+		} else if(days > 1) {
+			days = days + " Days "
+		}
+		var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		if (hours < 10) {
+			hours = '0' + hours;
+		}
+		var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+		if (minutes < 10) {
+			minutes = '0' + minutes;
+		}
+		var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+		if (seconds < 10) {
+			seconds = '0' + seconds;
+		}
+		document.getElementById("countdown").innerHTML = days + "" + hours + ":" + minutes + ":" + seconds + "";
+
 	}, 1000);
+}
+
+function fetchJSON() {
+	fetch('donation.json')
+		.then(response => response.json())
+		.then(data => {
+			return data;
+		});
+}
+
+function sendJSON(data) {
+	var fd = new FormData();
+
+	fd.append("json", JSON.stringify(data));
+	fetch("receive.php", {
+		method: "POST",
+		body: fd
+	});
 }
 
 function fadeOut(element) {
@@ -282,6 +341,22 @@ function fadeIn(element) {
 		element.style.filter = 'alpha(opacity=' + op * 100 + ")";
 		op += op * 0.01;
 	}, 4000);
+}
+
+function getCookie(cname) {
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return false;
 }
 
 

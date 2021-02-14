@@ -10,8 +10,7 @@ div {
 	color: #04D9FF;
 }
 
-.total, .donation {
-	font-size: 40px;
+.total, .donation, .timer {
 	width: 900px;
 	height: 100px;
 	background-color: #37415d;
@@ -20,7 +19,22 @@ div {
 	text-align: left;
 }
 
+.timer {
+	width: 450px;
+	height: 150px;
+	text-align: center;
+}
+
+.timer h1 {
+	font-size: 30px;
+}
+
+.timer p {
+	font-size: 40px;
+	margin-top: 10px;
+}
 .total p, .donation p {
+	font-size: 40px;
 	margin-top: 20px;
 	padding-left: 10px;
 }
@@ -28,6 +42,10 @@ div {
 #goal, #amt {
 	float: right;
 	padding-right: 10px;
+}
+
+#goal {
+	font-size: 37px;
 }
 
 .popup {
