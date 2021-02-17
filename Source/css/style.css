@@ -13,39 +13,50 @@ div {
 .total, .donation, .timer {
 	width: 900px;
 	height: 100px;
-	background-color: #37415d;
-	border: #04D9FF 3px solid;
+	/* background-color: #37415d;
+	border: #04D9FF 3px solid; */
 	border-radius: 15px;
 	text-align: left;
 }
 
+.total, .donation {
+	background-image: url('../images/background-wide.png');
+}
+
+.total p, .donation p {
+	font-size: 35px;
+	margin-top: 20px;
+	padding-top: 30px;
+	padding-left: 35px;
+}
+
 .timer {
+	background-image: url('../images/background-short.png');
+	background-repeat: no-repeat;
+	padding-top: 15px;
 	width: 450px;
 	height: 150px;
 	text-align: center;
 }
 
 .timer h1 {
-	font-size: 30px;
+	font-size: 25px;
 }
 
 .timer p {
 	font-size: 40px;
 	margin-top: 10px;
 }
-.total p, .donation p {
-	font-size: 40px;
-	margin-top: 20px;
-	padding-left: 10px;
-}
-
-#goal, #amt {
-	float: right;
-	padding-right: 10px;
-}
 
 #goal {
+	float: right;
 	font-size: 37px;
+	padding-right: 30px;
+}
+
+#amt {
+	float: right;
+	padding-right: 30px;
 }
 
 .popup {
@@ -54,15 +65,15 @@ div {
 
 .popup {
 	font-family: 'furore';
-	background-image: url("https://cdn.streamelements.com/static/alertbox/extralife-default.png");
+	background-image: url("../images/background-popup.png");
 	background-repeat: no-repeat;
-	width: 1075px;
+	width: 1175px;
 	height: 450px;
 }
 
 .popup h1 {
 	padding-top: 170px;
-	padding-left: 90px;
+	padding-left: 0px;
 	padding-bottom: 0;
 	margin-bottom: 0;
 	font-size: 40px;
@@ -71,7 +82,7 @@ div {
 .popup h2 {
 	font-size: 40px;
 	margin: 0;
-	padding: 0 0 0 90px;;
+	padding: 0 0 0 0;;
 }
 
 .popup p {
