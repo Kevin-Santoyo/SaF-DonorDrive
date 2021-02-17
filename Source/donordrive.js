@@ -5,14 +5,14 @@
 localStorage.setItem("etagTotal", "");
 localStorage.setItem("etagDonation", "");
 localStorage.setItem("etagRecent", "");
+localStorage.setItem("etagList", "");
+
 
 if (getCookie('recentDonation')) {
 	var donationCookie = getCookie('recentDonation');
-	console.log("success");
 	localStorage.setItem("recentDonation", donationCookie);
 } else {
 	localStorage.setItem("recentDonation", "");
-	console.log("failure");
 }
 
 var participantID = "448764";
@@ -246,6 +246,46 @@ function donorNameFilterPopup(input) {
 	} else {
 		return "Anonymous Donor";
 	}
+
+}
+
+function makeDonationList() {
+
+	const donationHeaders = new Headers({
+		'If-none-match': localStorage.getItem('etagList')
+	});
+
+	const requestDonations = new Request(donationLink, {
+		method: 'GET',
+		headers: donationHeaders,
+		mode: 'cors',
+		cache: 'default',
+	});
+
+	var donotable = document.createElement("table");
+
+	fetch(requestDonations)
+		.then(function (response) {
+			if (response.status == 304) {
+				return false;
+			} else {
+				response.json().then(data => {
+					for (donor in data) {
+						let row = donotable.insertRow();
+						row.insertCell(0).textContent = data[donor].displayName;
+						row.insertCell(1).textContent = '$' + data[donor].amount;
+						row.insertCell(2).textContent = data[donor].message;
+					}
+					document.body.appendChild(donotable);
+					console.log("Table Write Successful");
+					audio.play();
+					var etag = response.headers.get('etag');
+					localStorage.setItem('etagList', etag);
+				});
+			}
+		}).catch(function (err) {
+			console.error(` Err: ${err}`);
+		});
 
 }
 
