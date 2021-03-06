@@ -276,7 +276,10 @@ function makeDonationList() {
 						row.insertCell(1).textContent = '$' + data[donor].amount;
 						row.insertCell(2).textContent = data[donor].message;
 					}
-					document.body.appendChild(donotable);
+					audio.volume = .3
+					var listTarget = document.getElementById("list");
+					listTarget.innerHTML = "";
+					listTarget.appendChild(donotable);
 					console.log("Table Write Successful");
 					audio.play();
 					var etag = response.headers.get('etag');
