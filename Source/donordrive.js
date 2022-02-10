@@ -15,7 +15,7 @@ if (getCookie('recentDonation')) {
 	localStorage.setItem("recentDonation", "");
 }
 
-var participantID = "448764";
+var participantID = "478869";
 var participantLink = 'https://extralife.donordrive.com/api/participants/' + participantID;
 var donationLink = 'https://extralife.donordrive.com/api/participants/' + participantID + '/donations';
 var vol = .5;
@@ -294,7 +294,7 @@ function makeDonationList() {
 
 function countdownTimer() {
 
-	var countDate = new Date("Feb 20, 2021 10:00:00").getTime();
+	var countDate = new Date("Feb 19, 2022 10:00:00").getTime();
 
 	var x = setInterval(function () {
 
