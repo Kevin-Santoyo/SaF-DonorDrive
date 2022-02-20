@@ -18,6 +18,7 @@ if (getCookie('recentDonation')) {
 var participantID = "478869";
 var participantLink = 'https://extralife.donordrive.com/api/participants/' + participantID;
 var donationLink = 'https://extralife.donordrive.com/api/participants/' + participantID + '/donations';
+var incentivesLink = 'https://extralife.donordrive.com/api/participants/' + participantID + '/incentives';
 var vol = .5;
 var audio = new Audio('audio/cash.mp3');
 audio.volume = vol
@@ -251,6 +252,19 @@ function donorNameFilterPopup(input) {
 
 function makeDonationList() {
 
+	let incentives
+	const fetchIncentives = new Request(incentivesLink, {
+		method: 'GET',
+		mode: 'cors',
+		cache: 'default',
+	})
+
+	fetch(fetchIncentives).then(function (response) {
+		response.json().then(data => {
+			incentives = data;
+		})
+	})
+
 	const donationHeaders = new Headers({
 		'If-none-match': localStorage.getItem('etagList')
 	});
@@ -275,6 +289,15 @@ function makeDonationList() {
 						row.insertCell(0).textContent = data[donor].displayName;
 						row.insertCell(1).textContent = '$' + data[donor].amount;
 						row.insertCell(2).textContent = data[donor].message;
+						if (data[donor].incentiveID) {
+							incentives.forEach(element => {
+								if (data[donor].incentiveID == element.incentiveID) {
+									row.insertCell(3).textContent = element.description;
+								}
+							});
+						} else {
+							row.insertCell(3).textContent = 'None';
+						}
 					}
 					audio.volume = .3
 					var listTarget = document.getElementById("list");

@@ -60,14 +60,16 @@ div {
 }
 
 table {
+	width: 100%;
 	border: black solid 1px;
 }
 
 table tbody tr td {
 	color: black;
 	text-align: left;
+	border-right: black solid 1px;
 	border-bottom: black solid 1px;
-	font-size: 20px;
+	font-size: 16px;
 	padding-right: 20px;
 	padding-bottom: 10px;
 }
