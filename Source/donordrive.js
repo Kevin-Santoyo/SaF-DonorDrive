@@ -286,17 +286,19 @@ function makeDonationList() {
 				response.json().then(data => {
 					for (donor in data) {
 						let row = donotable.insertRow();
+						var dt = new Date(data[donor].createdDateUTC)
 						row.insertCell(0).textContent = data[donor].displayName;
 						row.insertCell(1).textContent = '$' + data[donor].amount;
 						row.insertCell(2).textContent = data[donor].message;
+						row.insertCell(3).textContent = dt.toLocaleTimeString();
 						if (data[donor].incentiveID) {
 							incentives.forEach(element => {
 								if (data[donor].incentiveID == element.incentiveID) {
-									row.insertCell(3).textContent = element.description;
+									row.insertCell(4).textContent = element.description;
 								}
 							});
 						} else {
-							row.insertCell(3).textContent = 'None';
+							row.insertCell(4).textContent = 'None';
 						}
 					}
 					audio.volume = .3
