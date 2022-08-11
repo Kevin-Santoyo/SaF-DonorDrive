@@ -1,0 +1,48 @@
+@font-face {
+	font-family: 'furore';
+	src: url('../fonts/furore.ttf') format('truetype');
+}
+
+div {
+	font-family: 'furore';
+    font-size: 35px;
+	text-align: center;
+	color: #38393A;
+}
+
+#goal {
+	padding-left: 30px;
+}
+
+#amt {
+	padding-left: 15px;
+}
+
+/* (A) STANDARD ROW HEIGHT */
+.scrollbox, .scroll-item {
+    height: 35px;
+    line-height: 30px;
+  }
+   
+  /* (B) FIXED WRAPPER */
+  .scrollbox {
+    overflow: hidden; /* HIDE SCROLL BAR */
+  }
+  /* (C) TICKER ITEMS */
+  .scroll-item { text-align: center; }
+   
+  /* (D) ANIMATION - MOVE ITEMS FROM TOP TO BOTTOM */
+  /* CHANGE KEYFRAMES IF YOU ADD/REMOVE ITEMS */
+  .scroller { position: relative; }
+  @keyframes tickerv {
+    0% { bottom: 0; } /* FIRST ITEM */
+    50% { bottom: 35px; } /* SECOND ITEM */
+    100% { bottom: 0; } /* BACK TO FIRST */
+  }
+  .scroller {
+    animation-name: tickerv;
+    animation-duration: 15s;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(1, 0, .5, 0);
+  }
+  .scroller:hover { animation-play-state: paused; }

@@ -2,6 +2,7 @@
 	font-family: 'furore';
 	src: url('../fonts/furore.ttf') format('truetype');
 }
+
 div {
 	font-family: 'furore';
 	width: 300px;
@@ -24,7 +25,7 @@ div {
 }
 
 .total p, .donation p {
-	font-size: 35px;
+	font-size: 30px;
 	margin-top: 20px;
 	padding-top: 30px;
 	padding-left: 35px;
@@ -50,7 +51,7 @@ div {
 
 #goal {
 	float: right;
-	font-size: 37px;
+	font-size: 30px;
 	padding-right: 30px;
 }
 
@@ -110,4 +111,34 @@ table tbody tr td {
 .popup .text {
 	font-family: 'Verdana';
 	color: white;
+}
+
+.timer2 {
+	width: 900px;
+	height: 100px;
+	border-radius: 15px;
+	text-align: left;
+}
+
+
+.timer2 {
+	background-repeat: no-repeat;
+	padding-top: 15px;
+	text-align: center;
+}
+
+.timer2 h1 {
+	font-size: 25px;
+}
+
+.timer2 p {
+	font-size: 40px;
+	margin-top: 10px;
+	color: #38393A
+}
+
+.scroller {
+	width: 100%;
+	height: 100px;
+	color: #38393A
 }

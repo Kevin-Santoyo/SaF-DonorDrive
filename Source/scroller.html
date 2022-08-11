@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Fundraiser Scroller</title>
+	<script src="donordrive.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/style2.css">
+</head>
+
+<body>
+	<script>
+		getDonationInfo();
+		getDonationList();
+		getSwears();
+		setInterval(getDonationInfo, 20000);
+		setInterval(getDonationList, 20000);
+	</script>
+	<div class="scrollbox">
+	<div class="scroller">
+		<div class="scroll-item">Total Raised: <span id="goal"></span></div>
+		<div class="scroll-item"><span id="recentDono"></span></div>
+		<div class="scroll-item" id="swears"></div>
+	</div>
+	</div>
+</body>
+
+</html>

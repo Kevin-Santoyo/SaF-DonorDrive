@@ -1,0 +1,141 @@
+@font-face {
+	font-family: 'furore';
+	src: url('../fonts/furore.ttf') format('truetype');
+}
+div {
+	font-family: 'furore';
+	width: 300px;
+	height: 200px;
+	text-align: center;
+	/* color: #04D9FF; */
+	color: #38393A;
+}
+
+.timer {
+	width: 900px;
+	height: 100px;
+	border-radius: 15px;
+	text-align: left;
+}
+
+.total {
+	width: 100%;
+	height: 100px;
+	border-radius: 15px;
+	text-align: center;
+}
+
+.donation {
+	min-width: 550px;
+	max-width: 900px;
+	height: 100px;
+	border-radius: 15px;
+	text-align: center;
+}
+
+.total, .donation {
+	/* background-image: url('../images/background-wide.png'); */
+}
+
+.total p, .donation p {
+	font-size: 35px;
+	margin-top: 20px;
+	padding-top: 30px;
+}
+
+.timer {
+	/* background-image: url('../images/background-short.png'); */
+	background-repeat: no-repeat;
+	padding-top: 15px;
+	/* width: 450px;
+	height: 150px; */
+	text-align: center;
+}
+
+.timer h1 {
+	font-size: 25px;
+}
+
+.timer p {
+	font-size: 40px;
+	margin-top: 10px;
+}
+
+#goal {
+	font-size: 35px;
+	padding-left: 30px;
+}
+
+#amt {
+	padding-left: 15px;
+}
+
+table {
+	border: black solid 1px;
+}
+
+table tbody tr td {
+	color: black;
+	text-align: left;
+	border-right: black solid 1px;
+	border-bottom: black solid 1px;
+	font-size: 20px;
+	padding-right: 20px;
+	padding-bottom: 10px;
+}
+
+#list table tbody tr:first-child {
+	background-color: #001C40;
+}
+
+#list table tbody tr:first-child td {
+	color: white !important;
+	text-align: center;
+}
+
+#list table tbody tr:nth-child(2) {
+	background-color: #04D9FF;
+}
+
+.popup {
+	opacity: 0;
+	color: #04D9FF !important;
+}
+
+.popup {
+	font-family: 'furore';
+	background-image: url("../images/background-popup.png");
+	background-repeat: no-repeat;
+	width: 1175px;
+	height: 450px;
+	color: #04D9FF !important;
+}
+
+.popup h1 {
+	padding-top: 170px;
+	padding-left: 0px;
+	padding-bottom: 0;
+	margin-bottom: 0;
+	font-size: 40px;
+	color: #04D9FF !important;
+}
+
+.popup h2 {
+	font-size: 40px;
+	margin: 0;
+	padding: 0 0 0 0;;
+	color: #04D9FF !important;
+}
+
+.popup p {
+	margin-top: 10px;
+	padding-left: 140px;
+	font-size: 30px;
+	max-width: 900px;
+	color: #04D9FF !important;
+}
+
+.popup .text {
+	font-family: 'Verdana';
+	color: white;
+}

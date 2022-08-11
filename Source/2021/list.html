@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Fundraiser Donation List</title>
+	<script src="customization.js" type="text/javascript"></script>
+	<script src="donordrive.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+	<script>
+		buildIncentiveArray();
+		makeDonationList();
+		setInterval(makeDonationList, 20000);
+	</script>
+	<aside id="list">
+    </aside>
+</body>
+
+</html>
